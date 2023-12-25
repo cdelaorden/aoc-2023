@@ -1,0 +1,12 @@
+{
+  "extends": "@tsconfig/node18-strictest/tsconfig.json",
+  "compilerOptions": {
+    "ignoreDeprecations": "5.0",
+    "outDir": "build",
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["src/*"]
+    }
+  },
+  "include": ["**/*.ts"]
+}
