@@ -1,6 +1,8 @@
 import { Day1PartOne, Day1PartTwo } from './days/1'
 import { day2partOne, day2partTwo } from './days/2/index.'
 import { day3partOne, day3partTwo } from './days/3'
+import { day4partOne, day4partTwo } from './days/4'
+import { readInput, readSample } from './lib/fs'
 
 async function main(day: number) {
   switch (day) {
@@ -20,6 +22,13 @@ async function main(day: number) {
       console.log('Day 3: Gear ratios')
       await day3partOne()
       await day3partTwo()
+      break
+    }
+    case 4: {
+      const sample = await readSample(4)
+      const input = await readInput(4)
+      day4partOne(sample, input)
+      day4partTwo(sample, input)
       break
     }
     default: {
