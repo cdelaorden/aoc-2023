@@ -146,11 +146,6 @@ const findRealGears = (e: Engine2) => {
           (adjacentPoints.at(1)?.value ?? 0)
         )
       } else return 0
-      /*  .filter((c) => {
-        return c.length == 2
-      })
-      .map((c) => (c.at(0)?.value as number) * (c.at(1)?.value as number))
-      */
     })
     .reduce((acc, x) => acc + x, 0)
 }
