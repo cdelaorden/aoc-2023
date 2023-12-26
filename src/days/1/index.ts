@@ -48,7 +48,7 @@ const dict: Record<string, number> = {
   eight: 8,
   nine: 9,
 }
-const regex = /(\d|one|two|three|four|five|six|seven|eight|nine)/gm
+const regex = /(\d|one|two|three|four|five|six|seven|eight|nine)/g
 
 export const getDigits = (line: string) => {
   const matches = line.match(regex)
