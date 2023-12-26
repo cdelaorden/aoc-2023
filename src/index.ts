@@ -1,5 +1,6 @@
 import { Day1PartOne, Day1PartTwo } from './days/1'
 import { day2partOne, day2partTwo } from './days/2/index.'
+import { day3partOne, day3partTwo } from './days/3'
 
 async function main(day: number) {
   switch (day) {
@@ -13,6 +14,12 @@ async function main(day: number) {
       console.log('Day Two: Cube conundrum')
       await day2partOne()
       await day2partTwo()
+      break
+    }
+    case 3: {
+      console.log('Day 3: Gear ratios')
+      await day3partOne()
+      await day3partTwo()
       break
     }
     default: {
