@@ -2,7 +2,7 @@ import { Day1PartOne, Day1PartTwo } from './days/1'
 import { day2partOne, day2partTwo } from './days/2/index.'
 import { day3partOne, day3partTwo } from './days/3'
 import { day4partOne, day4partTwo } from './days/4'
-import { day5partOne, day5partTwo } from './days/5'
+import { day5partOne, day5partTwoPool } from './days/5'
 import { readInput, readSample } from './lib/fs'
 
 async function main(day: number) {
@@ -34,7 +34,7 @@ async function main(day: number) {
     }
     case 5: {
       day5partOne(sample, input)
-      day5partTwo(sample, input)
+      await day5partTwoPool(sample, input)
       break
     }
     default: {

@@ -14,7 +14,7 @@
     "ts-compile": "tsc --noEmit",
     "lint": "eslint ./src --ext .ts",
     "coverage": "jest --passWithNoTests --coverage",
-    "build": "tsc && tsc-alias",
+    "build": "tsc && tsc-alias && cp ./src/fixtures ./build/",
     "start": "node build/index.js",
     "prepare": "husky install"
   },
@@ -52,6 +52,7 @@
   },
   "dependencies": {
     "dotenv": "^16.0.0",
-    "remeda": "^1.33.0"
+    "remeda": "^1.33.0",
+    "workerpool": "^9.0.4"
   }
 }
