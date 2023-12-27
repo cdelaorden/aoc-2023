@@ -1,3 +1,4 @@
+import { performance } from 'perf_hooks'
 import { Day1PartOne, Day1PartTwo } from './days/1'
 import { day2partOne, day2partTwo } from './days/2/index.'
 import { day3partOne, day3partTwo } from './days/3'
@@ -9,6 +10,7 @@ import { readInput, readSample } from './lib/fs'
 async function main(day: number) {
   const sample = await readSample(day)
   const input = await readInput(day)
+  const start = performance.now()
   switch (day) {
     case 1: {
       console.log('Day One: Trebuchet')
@@ -48,7 +50,7 @@ async function main(day: number) {
     }
   }
 
-  console.log('Finished.')
+  console.log('Finished in %s ms.', (performance.now() - start).toFixed(2))
   process.exit(0)
 }
 

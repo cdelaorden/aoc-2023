@@ -5,7 +5,7 @@ type RaceInfo = {
 export function day6partOne(sample: string, input: string) {
   if (!sample || !input) throw new Error('Missing input')
   const races = parseRaces(input)
-  console.log('Races %o', races)
+  // console.log('Races %o', races)
   const winsPerRace = races.map(calculateDifferentRaceWins)
   console.log(
     'Part One: %d',
@@ -15,6 +15,9 @@ export function day6partOne(sample: string, input: string) {
 
 export function day6partTwo(sample: string, input: string) {
   if (!sample || !input) throw new Error('Missing input')
+  const races = parseRaces(input)
+  const race = fixKerning(races)
+  console.log('Part Two: %d', calculateDifferentRaceWins(race))
 }
 
 const calculateDifferentRaceWins = (r: RaceInfo): number => {
@@ -43,4 +46,14 @@ const parseRaces = (s: string) => {
     })
   })
   return result
+}
+
+const fixKerning = (races: RaceInfo[]): RaceInfo => {
+  if (!races.length) throw new Error('BOOM')
+  const result = { ...races[0] }
+  races.slice(1).forEach((r) => {
+    result.time = Number(`${result.time}${r.time}`)
+    result.distance = Number(`${result.distance}${r.distance}`)
+  })
+  return result as RaceInfo
 }
