@@ -9,7 +9,7 @@ type Card = {
 const getCardScore = (c: Card) => {
   return c.winner
     .filter((x) => c.owned.some((y) => y === x))
-    .reduce((acc, n) => {
+    .reduce((acc) => {
       if (acc === 0) return 1
       return acc * 2
     }, 0)
@@ -39,7 +39,7 @@ function parseCards(data: string): Card[] {
   })
 }
 
-export function day4partOne(sample: string, input: string) {
+export function day4partOne(_sample: string, input: string) {
   const cards = parseCards(input)
   // console.log(cards.slice(0, 10))
   const cardScores = cards.map(getCardScore)
@@ -51,8 +51,8 @@ export function day4partOne(sample: string, input: string) {
 
 const getNumOfCopies = (c: Card) => intersection(c.owned, c.winner).length
 
-export function day4partTwo(sample: string, input: string) {
-  const cards = parseCards(sample)
+export function day4partTwo(_sample: string, input: string) {
+  const cards = parseCards(input)
   const cardCounter = cards.reduce((acc, c) => {
     acc[c.id] = 1
     return acc
@@ -60,13 +60,11 @@ export function day4partTwo(sample: string, input: string) {
   cards.forEach((c) => {
     const copies = range(c.id + 1, c.id + 1 + getNumOfCopies(c))
     copies.forEach((id) => {
-      cardCounter[id] += 1
-      cards.push(cards[id])
+      cardCounter[id] += 1 * (cardCounter[c.id] ?? 0)
     })
   })
   console.log(
     'Part 2: %d',
     Object.values(cardCounter).reduce((acc, x) => acc + x, 0)
   )
-  console.log(cardCounter)
 }
