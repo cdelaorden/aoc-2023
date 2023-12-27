@@ -1,0 +1,26 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Camel Cards parseInput Creates an array of ParsedHands 1`] = `
+[
+  {
+    "bid": 765,
+    "hand": "32T3K",
+  },
+  {
+    "bid": 684,
+    "hand": "T55J5",
+  },
+  {
+    "bid": 28,
+    "hand": "KK677",
+  },
+  {
+    "bid": 220,
+    "hand": "KTJJT",
+  },
+  {
+    "bid": 483,
+    "hand": "QQQJA",
+  },
+]
+`;

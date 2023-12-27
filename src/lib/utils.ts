@@ -17,6 +17,13 @@ export const borderAround = (c: Coord) => {
   return result
 }
 
+export const sum = (xs: number[]) => xs.reduce((acc, x) => acc + x, 0)
+
 export const compose = <T>(...funcs: Array<(x: T) => T>) => {
   return funcs.reduce((f, g) => (x: T) => g(f(x)), identity)
 }
+
+export const explode = (a = '') => a.split('')
+export const splitLines = (a = '') => a.split('\n')
+
+export const isNumberString = (s: string) => /^\d+$/.test(s)
