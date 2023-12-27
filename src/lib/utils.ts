@@ -1,3 +1,5 @@
+import { identity } from 'remeda'
+
 export type Coord = {
   x: number
   y: number
@@ -13,4 +15,8 @@ export const borderAround = (c: Coord) => {
     }
   }
   return result
+}
+
+export const compose = <T>(...funcs: Array<(x: T) => T>) => {
+  return funcs.reduce((f, g) => (x: T) => g(f(x)), identity)
 }
