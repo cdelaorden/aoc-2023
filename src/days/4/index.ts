@@ -1,4 +1,7 @@
+import { intersection, range } from 'remeda'
+
 type Card = {
+  id: number
   winner: number[]
   owned: number[]
 }
@@ -29,6 +32,7 @@ function parseCards(data: string): Card[] {
         .map((s) => s.trim())
         .map(Number) ?? []
     return {
+      id: i + 1,
       winner,
       owned,
     }
@@ -45,4 +49,24 @@ export function day4partOne(sample: string, input: string) {
   )
 }
 
-export function day4partTwo(sample: string, input: string) {}
+const getNumOfCopies = (c: Card) => intersection(c.owned, c.winner).length
+
+export function day4partTwo(sample: string, input: string) {
+  const cards = parseCards(sample)
+  const cardCounter = cards.reduce((acc, c) => {
+    acc[c.id] = 1
+    return acc
+  }, {} as Record<string, number>)
+  cards.forEach((c) => {
+    const copies = range(c.id + 1, c.id + 1 + getNumOfCopies(c))
+    copies.forEach((id) => {
+      cardCounter[id] += 1
+      cards.push(cards[id])
+    })
+  })
+  console.log(
+    'Part 2: %d',
+    Object.values(cardCounter).reduce((acc, x) => acc + x, 0)
+  )
+  console.log(cardCounter)
+}
