@@ -78,7 +78,7 @@ export function day5partTwo(sample: string, input: string) {
   //console.log(funcs)
   const seedToLocation = compose(...funcs)
   console.log('Start calculation...')
-  const minSeedDistance = seedRanges.slice(1).reduce((acc, s, i) => {
+  const minSeedDistance = seedRanges.reduce((acc, s, i) => {
     console.log('Calculating range %d with %d numbers', i, s.count)
     let min = acc
     for (let n = s.start; n <= s.end; n++) {
