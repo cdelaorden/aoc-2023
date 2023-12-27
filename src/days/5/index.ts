@@ -25,13 +25,12 @@ const getLocation = (
   return search
 }
 
-export function day5partOne(sample: string, _input: string) {
-  const sections = _input.split('\n\n')
+export function day5partOne(_sample: string, input: string) {
+  const sections = input.split('\n\n')
   const seeds = Array.from(sections[0]?.trim().matchAll(/(\d+)/g) ?? []).map(
     (m) => Number(m[0])
   )
   const almanac = makeAlmanac(sections)
-  console.log('Seeds: %o. \nAlmanac: %o', seeds, almanac)
   const minLocation = seeds
     .map((s) => getLocation(almanac, s))
     .reduce((acc, x) => (x < acc ? x : acc), Infinity)
