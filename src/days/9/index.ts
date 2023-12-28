@@ -1,6 +1,6 @@
 import { explode, splitLines, sum } from '@/lib/utils'
 import assert from 'assert'
-import { createPipe, equals, last, map, pipe } from 'remeda'
+import { createPipe, equals, first, last, map, pipe } from 'remeda'
 
 export const makeHistory = (line: string) => explode(line, ' ').map(Number)
 
@@ -45,6 +45,13 @@ export const calculateNext = (history: number[], debug = false) => {
   return next + (last(history) ?? 0)
 }
 
+export const calculatePrev = (history: number[]) => {
+  assert(history.length, 'empty history')
+  const histories = reduceHistories(history)
+  const prev = histories.reduceRight((acc, h) => (first(h) ?? 0) - acc, 0)
+  return (first(history) ?? 0) - prev
+}
+
 export function day9PartOne(sample: string, input: string) {
   assert(sample && input, 'Bad input data')
   const solution = pipe(input, parseInput, map(calculateNext), sum)
@@ -53,4 +60,6 @@ export function day9PartOne(sample: string, input: string) {
 
 export function day9PartTwo(sample: string, input: string) {
   assert(sample && input, 'Bad input data')
+  const solution = pipe(input, parseInput, map(calculatePrev), sum)
+  console.log('Part Two', solution)
 }
