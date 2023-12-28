@@ -1,6 +1,6 @@
 import { explode, splitLines } from '@/lib/utils'
 import assert from 'assert'
-import { pipe } from 'remeda'
+import { map, pipe, reduce } from 'remeda'
 
 type CamelMap = {
   movements: number[]
@@ -27,15 +27,34 @@ const parseInput = (s: string): CamelMap =>
     }
   })
 
-const countSteps = (m: CamelMap): number => {
+const countSteps = (
+  m: CamelMap,
+  isEnding: (n: string) => boolean = (n) => n === 'ZZZ',
+  startAt = 'AAA'
+): number => {
   let count = 0
-  let currentNode = 'AAA'
-  while (currentNode !== 'ZZZ') {
+  let currentNode = startAt
+  while (!isEnding(currentNode)) {
     const nextMov = m.movements[count % m.movements.length] as number
     currentNode = m.nodes.get(currentNode)?.at(nextMov) as string
     count++
   }
   return count
+}
+
+const gcd = (x: number, y: number): number => {
+  if (y === 0) return x
+  return gcd(y, x % y)
+}
+const lcm = (x: number, y: number) => (x * y) / gcd(x, y)
+
+const calculateStartingPaths = (m: CamelMap) => {
+  return pipe(
+    m,
+    (m) => Array.from(m.nodes.keys()).filter((n) => n.endsWith('A')),
+    map((s) => countSteps(m, (n) => n.endsWith('Z'), s)),
+    reduce(lcm, 1)
+  )
 }
 
 export async function day8PartOne(sample: string, input: string) {
@@ -46,4 +65,6 @@ export async function day8PartOne(sample: string, input: string) {
 
 export async function day8PartTwo(sample: string, input: string) {
   assert(sample && input, 'Bad input data')
+  const solution = pipe(input, parseInput, calculateStartingPaths)
+  console.log('Part two: %d', solution)
 }
