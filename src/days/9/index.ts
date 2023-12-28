@@ -1,63 +1,53 @@
 import { explode, splitLines, sum } from '@/lib/utils'
 import assert from 'assert'
-import { createPipe, map, pipe, tap } from 'remeda'
+import { createPipe, equals, last, map, pipe } from 'remeda'
 
-const parseInput = createPipe(
-  splitLines,
-  map((l) => explode(l, ' ').map(Number))
-)
+export const makeHistory = (line: string) => explode(line, ' ').map(Number)
+
+export const parseInput = createPipe(splitLines, map(makeHistory))
+
+export const isAllZeros = (xs: number[]) =>
+  xs.length === 0 || xs.every(equals(0))
+
+export const printPyramid = (hs: number[][]) =>
+  hs.reduce((acc, h, i) => {
+    acc += '  '.repeat(i) + h.join('   ') + '\n'
+    return acc
+  }, '')
 
 export const calculateDifferences = (seq: number[]) =>
   seq.reduce((acc, n, index) => {
-    if (index < seq.length - 1) {
-      const next = seq[index + 1]
-      if (next) {
-        acc.push(next - n)
-      }
+    if (index > 0) {
+      acc.push(n - (seq.at(index - 1) as number))
     }
     return acc
   }, [] as number[])
 
-export const expandWithDifferences = (seq: number[]) => {
-  return seq.reduce(
-    (acc, _seq, index) => {
-      if (acc.at(-1)?.every((x) => x === 0)) return acc
-      const differences = calculateDifferences(acc[index] as number[])
-      acc.push(differences)
-      return acc
-    },
-    [seq]
-  )
+/**
+ * Returns the differences until a [0...0] array is found.
+ * Does not include the original
+ * @param from initial history
+ * @returns
+ */
+export function reduceHistories(from: number[]): number[][] {
+  if (isAllZeros(from)) return []
+  const next = calculateDifferences(from)
+  return [next].concat(reduceHistories(next))
 }
 
-export const extrapolateNextValue = (seqs: number[][]): number => {
-  const reversed = seqs.reverse()
-  reversed[0] = Array.from({ length: seqs.at(-1)?.length ?? 0 }).fill(
-    0
-  ) as number[]
-  return reversed
-    .reduce(
-      (acc, _seq, index) => {
-        const nextRow = reversed[index + 1]
-        if (!nextRow) return acc
-        acc.push((nextRow.at(-1) as number) + (acc.at(-1) as number))
-        return acc
-      },
-      [0]
-    )
-    .at(-1) as number
+export const calculateNext = (history: number[], debug = false) => {
+  assert(history.length, 'empty history')
+  const histories = reduceHistories(history)
+  if (debug) {
+    console.log(printPyramid([history].concat(histories)))
+  }
+  const next = histories.reduceRight((acc, h) => (last(h) ?? 0) + acc, 0)
+  return next + (last(history) ?? 0)
 }
 
 export function day9PartOne(sample: string, input: string) {
   assert(sample && input, 'Bad input data')
-  const solution = pipe(
-    input,
-    parseInput,
-    map(expandWithDifferences),
-    tap(console.log),
-    map(extrapolateNextValue),
-    sum
-  )
+  const solution = pipe(input, parseInput, map(calculateNext), sum)
   console.log('Part One', solution)
 }
 
