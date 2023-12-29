@@ -27,3 +27,9 @@ export const explode = (a = '', onChar = '') => a.split(onChar)
 export const splitLines = (a = '') => a.split('\n')
 
 export const isNumberString = (s: string) => /^\d+$/.test(s)
+
+export function transpose<T>(matrix: T[][]) {
+  if (!matrix[0]) return matrix
+  // @ts-expect-error whatever
+  return matrix[0].map((_col, c) => matrix.map((_row, r) => matrix[r][c]))
+}

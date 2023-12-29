@@ -1,4 +1,4 @@
-import { borderAround, isNumberString } from './utils'
+import { borderAround, isNumberString, transpose } from './utils'
 
 describe('borderAround', () => {
   it('generates an Array of Coords around a given Coord', () => {
@@ -17,5 +17,30 @@ describe('isNumberString', () => {
     expect(isNumberString('abc')).toBe(false)
     expect(isNumberString('')).toBe(false)
     expect(isNumberString('1bd')).toBe(false)
+  })
+})
+
+describe('Transpose', () => {
+  it('transposes a 2D matrix', () => {
+    expect(
+      transpose([
+        [1, 2],
+        [3, 4],
+      ])
+    ).toEqual([
+      [1, 3],
+      [2, 4],
+    ])
+    // N != M
+    expect(
+      transpose([
+        [1, 2, 3],
+        [4, 5, 6],
+      ])
+    ).toEqual([
+      [1, 4],
+      [2, 5],
+      [3, 6],
+    ])
   })
 })

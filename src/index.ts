@@ -1,6 +1,7 @@
 import { performance } from 'perf_hooks'
 import { Day1PartOne, Day1PartTwo } from './days/1'
 import { day10PartOne, day10PartTwo } from './days/10'
+import { day11PartOne, day11PartTwo } from './days/11'
 import { day2partOne, day2partTwo } from './days/2/index.'
 import { day3partOne, day3partTwo } from './days/3'
 import { day4partOne, day4partTwo } from './days/4'
@@ -75,6 +76,13 @@ async function main(day: number) {
       console.log('-----------------')
       day10PartOne(sample, input)
       day10PartTwo(sample, input)
+      break
+    }
+    case 11: {
+      console.log('Day 11: Cosmic Expansion')
+      console.log('------------------------')
+      day11PartOne(sample, input)
+      day11PartTwo(sample, input)
       break
     }
     default: {
