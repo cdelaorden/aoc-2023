@@ -147,7 +147,7 @@ const displayLoop = (m: Maze, loop: Point[]) => {
 
 const cleanMap = (m: Maze, loop: Point[]) => {
   for (let y = 0; y < m.grid.length; y++) {
-    /* @ts-expect-error is NOT undefined for god sake */
+    /* @ts-expect-error is NOT undefined */
     for (let x = 0; x < m.grid[y].length; x++) {
       const coords: Point = [y, x]
       const char = pathOr(m.grid, [y, x], '?')
@@ -160,9 +160,6 @@ const cleanMap = (m: Maze, loop: Point[]) => {
       )
     }
   }
-
-  /* const map = m.grid.map((row) => row.join('') + '\n').join('')
-  console.log(map) */
 }
 
 export function day10PartOne(sample: string, input: string) {
@@ -178,7 +175,6 @@ export function day10PartOne(sample: string, input: string) {
 }
 
 const countHowManyInside = (maze: Maze): number => {
-  //console.log(maze.grid)
   return maze.grid
     .map(
       (row) =>
