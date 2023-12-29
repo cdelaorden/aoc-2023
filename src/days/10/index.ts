@@ -1,6 +1,6 @@
 import { explode } from '@/lib/utils'
 import assert from 'assert'
-import { createPipe, pipe, reduce, zip } from 'remeda'
+import { createPipe, pipe, reduce } from 'remeda'
 
 /** Tuple of Y, X */
 type Point = [number, number]
@@ -116,25 +116,25 @@ export function day10PartOne(sample: string, input: string) {
 // Shoelace formula - thanks reddit :D
 // https://en.wikipedia.org/wiki/Shoelace_formula
 const calcInteriorArea = (loop: Point[]) => {
-  if (loop.length === 0) return 0
-
-  const paddedPoints = zip([loop.at(-1) as Point].concat(loop), loop)
-  // console.log(loop, paddedPoints)
-  const total = paddedPoints.reduce((acc, [p1, p2]) => {
-    acc += p1[0] * p2[1] - p2[0] * p1[1]
-    return acc
-  }, 0)
-  return total
+  let area = 0
+  for (let i = 0; i < loop.length; i++) {
+    const nextIndex = (i + 1) % loop.length
+    const [y1, x1] = loop[i] as Point
+    const [y2, x2] = loop[nextIndex] as Point
+    area += x1 * y2 - y1 * x2
+  }
+  return area
 }
 
 // Pick's theorem - https://en.wikipedia.org/wiki/Pick%27s_theorem#Formula
 const calculateArea = (path: Point[]): number => {
   const innerArea = calcInteriorArea(path)
-  return innerArea * (path.length / 2) - 1
+  console.log('inner area', innerArea)
+  return Math.abs(innerArea - path.length / 2 + 1)
 }
 
 export function day10PartTwo(sample: string, input: string) {
   assert(sample && input, 'Missing input data')
-  const solution = pipe(input, parseMaze, findLongestPath, calculateArea)
+  const solution = pipe(sample, parseMaze, findLongestPath, calculateArea)
   console.log('Part two', solution)
 }
