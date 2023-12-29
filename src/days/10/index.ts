@@ -1,6 +1,6 @@
 import { explode } from '@/lib/utils'
 import assert from 'assert'
-import { createPipe, pipe, reduce } from 'remeda'
+import { createPipe, isNumber, pathOr, pipe, reduce, setPath } from 'remeda'
 
 /** Tuple of Y, X */
 type Point = [number, number]
@@ -105,36 +105,106 @@ const findLongestPath = (maze: Maze): Point[] => {
 }
 
 const getMaxSteps = (path: Point[]) => Math.ceil(path.length / 2)
+const replaceMapChar = (s: string) => {
+  switch (s) {
+    case '|':
+      return '║'
+    case 'L':
+      return '╚'
+    case 'J':
+      return '╝'
+    case '7':
+      return '╗'
+    case 'F':
+      return '╔'
+    case '-':
+      return '═'
+    case 'S':
+      return 'S'
+    default:
+      return s
+  }
+}
+// eslint-disable-next-line
+const displayLoop = (m: Maze, loop: Point[]) => {
+  for (let y = 0; y < m.grid.length; y++) {
+    /* @ts-expect-error is NOT undefined for god sake */
+    for (let x = 0; x < m.grid[y].length; x++) {
+      const coords: Point = [y, x]
+      const char = pathOr(m.grid, [y, x], '?')
+      const indexInPath = loop.findIndex((p) => equals(p, coords))
+      m.grid = setPath(
+        m.grid,
+        [y, x],
+        indexInPath === -1 ? '.' : `\x1b[33m${replaceMapChar(char)}\x1b[0m`
+      )
+    }
+  }
+
+  const map = m.grid.map((row) => row.join('') + '\n').join('')
+  console.log(map)
+}
+
+const cleanMap = (m: Maze, loop: Point[]) => {
+  for (let y = 0; y < m.grid.length; y++) {
+    /* @ts-expect-error is NOT undefined for god sake */
+    for (let x = 0; x < m.grid[y].length; x++) {
+      const coords: Point = [y, x]
+      const char = pathOr(m.grid, [y, x], '?')
+      const indexInPath = loop.findIndex((p) => equals(p, coords))
+      const isStart = m.start[0] === y && m.start[1] === x
+      m.grid = setPath(
+        m.grid,
+        [y, x],
+        indexInPath === -1 && !isStart ? '.' : char
+      )
+    }
+  }
+
+  /* const map = m.grid.map((row) => row.join('') + '\n').join('')
+  console.log(map) */
+}
 
 export function day10PartOne(sample: string, input: string) {
   assert(sample && input, 'Missing input data')
   const maze = parseMaze(input)
-  const solution = pipe(maze, findLongestPath, getMaxSteps)
+  const solution = pipe(
+    maze,
+    findLongestPath,
+    // tap((loop) => displayLoop(maze, loop)),
+    getMaxSteps
+  )
   console.log('Part one', solution)
 }
 
-// Shoelace formula - thanks reddit :D
-// https://en.wikipedia.org/wiki/Shoelace_formula
-const calcInteriorArea = (loop: Point[]) => {
-  let area = 0
-  for (let i = 0; i < loop.length; i++) {
-    const nextIndex = (i + 1) % loop.length
-    const [y1, x1] = loop[i] as Point
-    const [y2, x2] = loop[nextIndex] as Point
-    area += x1 * y2 - y1 * x2
-  }
-  return area
-}
-
-// Pick's theorem - https://en.wikipedia.org/wiki/Pick%27s_theorem#Formula
-const calculateArea = (path: Point[]): number => {
-  const innerArea = calcInteriorArea(path)
-  console.log('inner area', innerArea)
-  return Math.abs(innerArea - path.length / 2 + 1)
+const countHowManyInside = (maze: Maze): number => {
+  //console.log(maze.grid)
+  return maze.grid
+    .map(
+      (row) =>
+        row.reduce(
+          ([total, inside], c) => {
+            assert(isNumber(total))
+            const inc = c === '.' && inside ? 1 : 0
+            return [total + inc, '|F7'.includes(c) ? !inside : inside] as [
+              number,
+              boolean
+            ]
+          },
+          [0, false]
+        )[0] as number
+    )
+    .reduce((sum, v: number) => {
+      return sum + v
+    }, 0)
 }
 
 export function day10PartTwo(sample: string, input: string) {
   assert(sample && input, 'Missing input data')
-  const solution = pipe(sample, parseMaze, findLongestPath, calculateArea)
+  const maze = parseMaze(input)
+  const solution = pipe(maze, findLongestPath, (loop) => {
+    cleanMap(maze, loop)
+    return countHowManyInside(maze)
+  })
   console.log('Part two', solution)
 }
