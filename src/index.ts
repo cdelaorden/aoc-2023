@@ -1,5 +1,6 @@
 import { performance } from 'perf_hooks'
 import { Day1PartOne, Day1PartTwo } from './days/1'
+import { day10PartOne, day10PartTwo } from './days/10'
 import { day2partOne, day2partTwo } from './days/2/index.'
 import { day3partOne, day3partTwo } from './days/3'
 import { day4partOne, day4partTwo } from './days/4'
@@ -34,33 +35,46 @@ async function main(day: number) {
       break
     }
     case 4: {
+      console.log('Day 4')
       day4partOne(sample, input)
       day4partTwo(sample, input)
       break
     }
     case 5: {
+      console.log('Day 5')
       day5partOne(sample, input)
       await day5partTwoPool(sample, input)
       break
     }
     case 6: {
+      console.log('Day 6')
       day6partOne(sample, input)
       day6partTwo(sample, input)
       break
     }
     case 7: {
+      console.log('Day 7')
       day7PartOne(sample, input)
       day7PartTwo(sample, input)
       break
     }
     case 8: {
+      console.log('Day 8')
       day8PartOne(sample, input)
       day8PartTwo(sample, input)
       break
     }
     case 9: {
+      console.log('Day 9')
       day9PartOne(sample, input)
       day9PartTwo(sample, input)
+      break
+    }
+    case 10: {
+      console.log('Day 10: Pipe Maze')
+      console.log('-----------------')
+      day10PartOne(sample, input)
+      day10PartTwo(sample, input)
       break
     }
     default: {
