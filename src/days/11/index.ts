@@ -40,8 +40,6 @@ const processMap = (
     } else {
       row.forEach((c, x) => {
         if (c === '#') {
-          // account for expansion
-
           stars.add([y, x])
         }
       })
@@ -55,18 +53,18 @@ const processMap = (
   }
 }
 
-const moveStars = (m: GalaxyMap): GalaxyMap => {
+const moveStars = (m: GalaxyMap, expandBy = 2): GalaxyMap => {
   return {
-    grid: m.grid,
-    expandedCols: m.expandedCols,
-    expandedRows: m.expandedRows,
+    ...m,
     stars: m.stars.map((coords) => {
-      const incY = Array.from(m.expandedRows.values()).filter(
-        (y) => y < coords[0]
-      ).length
-      const incX = Array.from(m.expandedCols.values()).filter(
-        (x) => x <= coords[1]
-      ).length
+      const incY =
+        Array.from(m.expandedRows.values()).filter((y) => y < coords[0])
+          .length *
+        (expandBy - 1)
+      const incX =
+        Array.from(m.expandedCols.values()).filter((x) => x < coords[1])
+          .length *
+        (expandBy - 1)
       return [coords[0] + incY, coords[1] + incX]
     }),
   }
@@ -85,9 +83,15 @@ export function day11PartOne(sample: string, input: string) {
   assert(sample && input, 'Bad input data')
   const map = pipe(input, parseInput, processMap, moveStars)
   const solution = pipe(calculateDistances(map), sum, (x) => x / 2)
-  console.log(solution)
+  console.log('Part One', solution)
 }
 
 export function day11PartTwo(sample: string, input: string) {
   assert(sample && input, 'Bad input data')
+  const EXPANSION = 1_000_000
+  const map = pipe(input, parseInput, processMap, (m) =>
+    moveStars(m, EXPANSION)
+  )
+  const solution = pipe(calculateDistances(map), sum, (x) => x / 2)
+  console.log('Part Two', solution)
 }
