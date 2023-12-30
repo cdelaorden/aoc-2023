@@ -33,3 +33,9 @@ export function transpose<T>(matrix: T[][]) {
   // @ts-expect-error whatever
   return matrix[0].map((_col, c) => matrix.map((_row, r) => matrix[r][c]))
 }
+
+export function combine<T>(list: T[]) {
+  return list.flatMap((item, i) =>
+    list.slice(i + 1).map((other) => [item, other])
+  )
+}

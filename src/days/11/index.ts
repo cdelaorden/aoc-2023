@@ -1,4 +1,4 @@
-import { explode, splitLines, sum, transpose } from '@/lib/utils'
+import { combine, explode, splitLines, sum, transpose } from '@/lib/utils'
 import assert from 'assert'
 import { createPipe, map, pipe } from 'remeda'
 /**
@@ -8,8 +8,8 @@ type Point = [number, number]
 type GalaxyMap = {
   grid: Array<Array<string>>
   stars: Array<Point>
-  expandedCols: Set<number>
-  expandedRows: Set<number>
+  expandedCols: Array<number>
+  expandedRows: Array<number>
 }
 
 const parseInput = createPipe(
@@ -25,22 +25,23 @@ const parseInput = createPipe(
 const processMap = (
   m: Omit<GalaxyMap, 'expandedRows' | 'expandedCols' | 'stars'>
 ): GalaxyMap => {
-  const emptyRows = new Set<number>()
-  const emptyCols = new Set<number>()
-  const stars = new Set<[number, number]>()
-
+  const emptyRows: number[] = []
+  const emptyCols: number[] = []
+  const stars: [number, number][] = []
+  // find empty cols
   transpose(m.grid).forEach((col, y) => {
     if (!col.find((x) => x === '#')) {
-      emptyCols.add(y)
+      emptyCols.push(y)
     }
   })
+  // find empty rows and star locations
   m.grid.forEach((row, y) => {
     if (!row.find((c) => c === '#')) {
-      emptyRows.add(y)
+      emptyRows.push(y)
     } else {
       row.forEach((c, x) => {
         if (c === '#') {
-          stars.add([y, x])
+          stars.push([y, x])
         }
       })
     }
@@ -49,7 +50,7 @@ const processMap = (
     grid: m.grid,
     expandedCols: emptyCols,
     expandedRows: emptyRows,
-    stars: Array.from(stars),
+    stars: stars,
   }
 }
 
@@ -58,13 +59,9 @@ const moveStars = (m: GalaxyMap, expandBy = 2): GalaxyMap => {
     ...m,
     stars: m.stars.map((coords) => {
       const incY =
-        Array.from(m.expandedRows.values()).filter((y) => y < coords[0])
-          .length *
-        (expandBy - 1)
+        m.expandedRows.filter((y) => y < coords[0]).length * (expandBy - 1)
       const incX =
-        Array.from(m.expandedCols.values()).filter((x) => x < coords[1])
-          .length *
-        (expandBy - 1)
+        m.expandedCols.filter((x) => x < coords[1]).length * (expandBy - 1)
       return [coords[0] + incY, coords[1] + incX]
     }),
   }
@@ -74,24 +71,34 @@ const manhattanDistance = (p1: Point, p2: Point) =>
   Math.abs(p2[0] - p1[0]) + Math.abs(p2[1] - p1[1])
 
 const calculateDistances = (m: GalaxyMap): number[] => {
-  return m.stars.flatMap((point) =>
-    m.stars.map((other) => manhattanDistance(point, other))
+  return combine(m.stars).map(([s1, s2]) =>
+    manhattanDistance(s1 as Point, s2 as Point)
   )
 }
 
 export function day11PartOne(sample: string, input: string) {
   assert(sample && input, 'Bad input data')
-  const map = pipe(input, parseInput, processMap, moveStars)
-  const solution = pipe(calculateDistances(map), sum, (x) => x / 2)
+  const solution = pipe(
+    input,
+    parseInput,
+    processMap,
+    moveStars,
+    calculateDistances,
+    sum
+  )
   console.log('Part One', solution)
 }
 
 export function day11PartTwo(sample: string, input: string) {
   assert(sample && input, 'Bad input data')
   const EXPANSION = 1_000_000
-  const map = pipe(input, parseInput, processMap, (m) =>
-    moveStars(m, EXPANSION)
+  const solution = pipe(
+    input,
+    parseInput,
+    processMap,
+    (m) => moveStars(m, EXPANSION),
+    calculateDistances,
+    sum
   )
-  const solution = pipe(calculateDistances(map), sum, (x) => x / 2)
   console.log('Part Two', solution)
 }

@@ -1,4 +1,4 @@
-import { borderAround, isNumberString, transpose } from './utils'
+import { borderAround, combine, isNumberString, transpose } from './utils'
 
 describe('borderAround', () => {
   it('generates an Array of Coords around a given Coord', () => {
@@ -42,5 +42,16 @@ describe('Transpose', () => {
       [2, 5],
       [3, 6],
     ])
+  })
+})
+
+describe('Combine', () => {
+  it('makes distinct pairs in a list', () => {
+    expect(combine([1, 2, 3])).toEqual([
+      [1, 2],
+      [1, 3],
+      [2, 3],
+    ])
+    expect(combine([1])).toEqual([])
   })
 })
