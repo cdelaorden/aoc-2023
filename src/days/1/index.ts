@@ -1,3 +1,5 @@
+// https://adventofcode.com/2023/day/1
+
 import { readInput, readSample } from '@/lib/fs'
 import { replace, reverse } from '@/lib/strings'
 import * as R from 'remeda'

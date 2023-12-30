@@ -1,3 +1,5 @@
+// https://adventofcode.com/2023/day/2
+
 import { readInput } from '@/lib/fs'
 import * as R from 'remeda'
 

@@ -1,3 +1,5 @@
+// https://adventofcode.com/2023/day/10
+
 import { explode } from '@/lib/utils'
 import assert from 'assert'
 import { createPipe, isNumber, pathOr, pipe, reduce, setPath } from 'remeda'

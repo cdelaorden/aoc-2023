@@ -1,3 +1,5 @@
+// https://adventofcode.com/2023/day/3
+
 import { readInput } from '@/lib/fs'
 import { borderAround, type Coord } from '@/lib/utils'
 import { uniq } from 'remeda'

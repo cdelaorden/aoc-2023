@@ -1,3 +1,5 @@
+// https://adventofcode.com/2023/day/7
+
 import { explode, splitLines, sum } from '@/lib/utils'
 import assert from 'node:assert'
 import { map, pipe, reduce, sort } from 'remeda'

@@ -1,3 +1,5 @@
+// https://adventofcode.com/2023/day/4
+
 import { intersection, range } from 'remeda'
 
 type Card = {
