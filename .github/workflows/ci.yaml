@@ -1,8 +1,8 @@
 name: Compile Lint Test
-on: 
-  push:
-      branches:
-      - main
+on:
+  # push:
+  #     branches:
+  #     - main
   pull_request:
     branches:
       - main
@@ -39,9 +39,7 @@ jobs:
         run: npm run lint
 
       - name: Compile TS
-        run: npm run ts-compile     
+        run: npm run ts-compile
 
       - name: Test
         run: npm run test
-
-
